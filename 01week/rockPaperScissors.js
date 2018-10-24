@@ -34,37 +34,31 @@ const checkMove = (hand) =>{
 }
 
 const checkWin = (hand1,hand2) =>{
+  let modulaHack = 0;
 
+  if(hand1==hand2){
+    return "It's a tie!";
+  }
+  const tempHand1 = moveToNumber(hand1);
+  const tempHand2 = moveToNumber(hand2);
+  //turning moves into values to do math on bellow
 
-let modulaHack = 0;
+  modulaHack = (tempHand1 - tempHand2) % 3;
+  if (modulaHack<0){
+    modulaHack+=3;
+  }
+  //the way the math should work is anything that adds together and modulos with 3 to 1, the first player
+  //wins. Sadly, modulo of negatives in javascript yields negative modulo, which is unlike how 
+  //normal mathamatitians think of negative modulo. But if you just add back in the modulo number,
+  //it yields the deseried value.
+  //I learned this modulo trick back in computer science school for this game, sadly
+  //the javascript implimentation for modulo of negative numbers makes it a bit more combersome to
+  //pull off. Still, it beats a big ol long if statement! 
 
-if(hand1==hand2){
-  return "It's a tie!";
-}
-
-
-const tempHand1 = moveToNumber(hand1);
-const tempHand2 = moveToNumber(hand2);
-
-
-//turning moves into values to do math on bellow
-
-modulaHack = (tempHand1 - tempHand2) % 3;
-if (modulaHack<0){
-  modulaHack+=3;
-}
-//the way the math should work is anything that adds together and modulos with 3 to 1, the first player
-//wins. Sadly, modulo of negatives in javascript yields negative modulo, which is unlike how 
-//normal mathamatitians think of negative modulo. But if you just add back in the modulo number,
-//it yields the deseried value.
-//I learned this modulo trick back in computer science school for this game, sadly
-//the javascript implimentation for modulo of negative numbers makes it a bit more combersome to
-//pull off. Still, it beats a big ol long if statement! 
-
-if  (modulaHack==1) {
-  return "Player 1 Wins!";
-}
-return "Player 2 Wins!";
+  if  (modulaHack==1) {
+    return "Player 1 Wins!";
+  }
+  return "Player 2 Wins!";
 
 }
 
