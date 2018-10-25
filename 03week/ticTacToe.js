@@ -61,17 +61,21 @@ function verticalWin() {
       stringOfVerticleElements+=board[j][i];
     }
     if(stringOfVerticleElements.trim() != "" && isArrayAllEqual(stringOfVerticleElements.split(""))){
+      // funny big of logic, but prevents trying to make an array out of empty string.
+      // I end up double testing for empty string a lot of places, need to clean that up
       console.log("Vertial Win")
-
+      // keeping around for testing, delete when I can
       return 1;
     }
     stringOfVerticleElements = ""
+    // reset the string builder
   }
 }
 
 function diagonalWin() {
   //left to right diaginal
   let stringToArrayHolder = "";
+  //another string to array builder
   for(let i =0;i<board.length;i++){
     stringToArrayHolder+=board[i][i]
   }
