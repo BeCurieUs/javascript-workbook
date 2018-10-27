@@ -25,18 +25,37 @@ function movePiece() {
 }
 
 function isLegal() {
-  // Your code here
+
 
 }
+
+
+
 
 function checkForWin() {
   // Your code here
 
 }
+  // let it begin!
+  // We get user input from where they want to take from to where they want to put to (startStack, endStack)
+  // We see if this is a legal move isLegal()T/F
+  // if so we move the peiece movePiece() 
+  // We see if this condition gives them a win (all stacked up properly on stack c) checkForWin()T/F
+  // After they win reset the game
+  // self challenge add harder difficulty by adding a disk after reset
+  // add turn counter and give user feed back on what a perfect game is compared to theirs
 
 function towersOfHanoi(startStack, endStack) {
-  // let it begin!
+
+  if(isLegal(startStack, endStack)){
+    movePiece(startStack, endStack)
+    if(checkForWin()){
+      resetGame();
+    }
+  }
 }
+
+
 
 function getPrompt() {
   printStacks();
@@ -60,6 +79,12 @@ if (typeof describe === 'function') {
   });
 
   describe('#isLegal()', () => {
+    it('Should disallow invalid inputs', () => {
+      assert.equal(isLegal('dog', 'b'), false);
+    });
+  });
+
+  describe('#isLegal()', () => {
     it('should not allow an illegal move', () => {
       stacks = {
         a: [4, 3, 2],
@@ -79,9 +104,9 @@ if (typeof describe === 'function') {
   });
   describe('#checkForWin()', () => {
     it('should detect a win', () => {
-      stacks = { a: [], b: [4, 3, 2, 1], c: [] };
+      stacks = { a: [], b: [], c: [4, 3, 2, 1] };
       assert.equal(checkForWin(), true);
-      stacks = { a: [1], b: [4, 3, 2], c: [] };
+      stacks = { a: [1], b: [], c: [4, 3, 2] };
       assert.equal(checkForWin(), false);
     });
   });
