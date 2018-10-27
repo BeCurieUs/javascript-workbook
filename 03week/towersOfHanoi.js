@@ -35,8 +35,7 @@ function checkForWin() {
 }
 
 function towersOfHanoi(startStack, endStack) {
-  // Your code here
-
+  // let it begin!
 }
 
 function getPrompt() {
