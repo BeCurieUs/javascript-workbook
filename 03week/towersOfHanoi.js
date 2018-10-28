@@ -13,18 +13,18 @@ let stacks = {
   c: []
 };
 
-function printStacks() {
+const printStacks = () => {
   console.log("a: " + stacks.a);
   console.log("b: " + stacks.b);
   console.log("c: " + stacks.c);
 }
 
-function movePiece(startStack, endStack) {
+const movePiece = (startStack, endStack) => {
   // console.log("When I move you move *just like that*")
   stacks[endStack].push(stacks[startStack].pop());
 }
 
-function isLegal(startStack, endStack) {
+const isLegal = (startStack, endStack) => {
   const startLength = stacks[startStack].length;
   const endLength = stacks[endStack].length;
   const startLastElement = stacks[startStack][startLength - 1];
@@ -53,10 +53,8 @@ const validLetter = (letterInput) =>{
   }
 }
 
-function checkForWin() {
-  if(stacks["a"].length == 0 && stacks["b"].length == 0){
-    return true;
-  }
+const checkForWin = () => {
+  return stacks["a"].length == 0 && stacks["b"].length == 0;
 }
 
 const resetGame = () => {
@@ -74,7 +72,7 @@ const resetGame = () => {
   // self challenge: add harder difficulty by adding a disk after reset
   // add turn counter and give user feed back on what a perfect game is compared to theirs
 
-function towersOfHanoi(startStack, endStack) {
+const towersOfHanoi = (startStack, endStack) => {
   const formatedStart = startStack.toLowerCase();
   const formatedEnd = endStack.toLowerCase();
 
