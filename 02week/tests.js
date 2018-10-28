@@ -117,7 +117,7 @@ if (typeof describe === 'function') {
       assert.equal(rockPaperScissors('Paper', 'SCISSORS'), "Hand two wins!");
       assert.equal(rockPaperScissors('rock ', 'sCiSsOrs'), "Hand one wins!");
     });
-    it('should promt user when any or both inputs are invalid', () => {
+    it('should prompt user when any or both inputs are invalid', () => {
       assert.equal(rockPaperScissors('rock', 'stuff'), "Player two has an invalid input.");
       assert.equal(rockPaperScissors('rock', '$%^&*'), "Player two has an invalid input.");
       assert.equal(rockPaperScissors('rock', 'Bigger rock'), "Player two has an invalid input.");
