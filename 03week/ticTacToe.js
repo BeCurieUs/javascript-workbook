@@ -68,6 +68,7 @@ function verticalWin() {
     }
     stringOfVerticleElements = ""
     // reset the string builder
+    // I don't like the way I sloved this, likely to refactor
   }
 }
 
