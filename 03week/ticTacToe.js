@@ -18,7 +18,7 @@ let board = [
 
 let playerTurn = 'X';
 
-function printBoard() {
+const printBoard= () => {
   console.log('   0  1  2');
   console.log('0 ' + board[0].join(' | '));
   console.log('  ---------');
@@ -28,11 +28,10 @@ function printBoard() {
 }
 const resetGame = () =>{
   playerTurn="X";
-  for(let i = 0; i<board.length;i++){
-    // still code like a c++ programmer. Looking for ways to go through arrays that isn't with endless for loops
-    board[i].fill(" ");
-    // like with fill(), this seems like a very javascript way to fill something vs making a for loop
-  }
+  board.forEach(element => {
+    element.fill(" ");
+  });
+  // finally using forEach loops :D
 }
 
 const isArrayAllEqual = (arr) => {
@@ -41,14 +40,14 @@ const isArrayAllEqual = (arr) => {
   // and passed it to this function. Even to the point of making strings arrays and passing them in
 }
 
-function horizontalWin() {
+const horizontalWin = () => {
+
   for(let i = 0;i<board.length;i++){
-    if(isArrayAllEqual(board[i])){
-      // go through every row and take that array and send it to our array tester
-      // easiest case since they are all in the same array
-      console.log("Horizontal Win")
-      return 1;
-    }
+    return (isArrayAllEqual(board[i]))
+    // go through every row and take that array and send it to our array tester
+    // easiest case since they are all in the same array
+    // console.log("Horizontal Win")
+    // return 1;
   }
 }
 
@@ -63,7 +62,7 @@ function verticalWin() {
     if(stringOfVerticleElements.trim() != "" && isArrayAllEqual(stringOfVerticleElements.split(""))){
       // funny big of logic, but prevents trying to make an array out of empty string.
       // I end up double testing for empty string a lot of places, need to clean that up
-      console.log("Vertial Win")
+      // console.log("Vertial Win")
       // keeping around for testing, delete when I can
       return 1;
     }
