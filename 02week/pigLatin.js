@@ -12,19 +12,18 @@ const pigLatinMyString = (word, vowelPosition)=>{
   if(vowelPosition == 0){
     return word + "yay"
   }
-  let mainString = word.split("");
+  const mainString = word.split("");
   const firstConsonants = mainString.splice(0,vowelPosition).join("");
   //not sure if there is a single line way to do this, settled on this. Still thinking about it
-  mainString = mainString.join("") + firstConsonants + "ay"
+  return mainString.join("") + firstConsonants + "ay"
   
-  return mainString;
   
 }
 
 const checkValidString = (word,validString)=>{
+  let letterIsValid = 0
   for(let i = 0 ; i<word.length;i++){
     //go through every letter in the word
-    let letterIsValid = 0
     //assume the letter is invalid
     for(let j = 0; j < validString.length;j++){
       //go through every letter in validation string
@@ -35,12 +34,20 @@ const checkValidString = (word,validString)=>{
     }
     if (!letterIsValid){
       //if letter is still invalid the entire string is invalid
-      return 0;
+      return letterIsValid;
     }
+    letterIsValid = 0
   }
   //if nothing is invalid, then everything is valid
-  return 1;
+  letterIsValid = 1;
+  return letterIsValid;
+  // implimented your changes, but I have to loop through the entire string, so I have to keep
+  // the conditional before the return. My logic also assumes the letter is false, so I have
+  // to reset the isvalid varible each loop. This was done by having it nexted in the loop
+  // but I took it outside the loop so I could return the value directly. But directly returning
+  // any of my if statements means only the first letter is checked for validity.
 }
+
 const findFirstVowelPosition = (word)=>{
   const allVowels = ["a","e","i","o","u"]
   for(let i = 0 ; i<word.length;i++){
