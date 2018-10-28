@@ -51,7 +51,7 @@ const horizontalWin = () => {
   }
 }
 
-function verticalWin() {
+const verticalWin = () => {
   for(let i =0;i<board.length;i++){
     let stringOfVerticleElements = "";
     // making a string to turn into an array cause I didn't want to push to a temp array
@@ -72,7 +72,7 @@ function verticalWin() {
   }
 }
 
-function diagonalWin() {
+const diagonalWin = () => {
   //left to right diaginal
   let stringToArrayHolder = "";
   //another string to array builder
@@ -94,7 +94,7 @@ function diagonalWin() {
   }
 }
 
-function checkForWin() {
+const checkForWin = () => {
 
   return verticalWin() || horizontalWin() || diagonalWin();
 }
@@ -125,7 +125,7 @@ const switchPlayer = (playerTurn) => {
 }
 
 
-function ticTacToe(row, column) {
+const ticTacToe = (row, column) => {
   const formatedRow = parseInt(row);
   const formatedColumn = parseInt(column);
   if (whatIsAtPosition(formatedRow,formatedColumn)!= "err" && !whatIsAtPosition(formatedRow,formatedColumn).trim()){
@@ -166,7 +166,7 @@ function ticTacToe(row, column) {
 // reset game
 
 
-function getPrompt() {
+const getPrompt = () => {
   printBoard();
   console.log("It's Player " + playerTurn + "'s turn.");
   rl.question('row: ', (row) => {
