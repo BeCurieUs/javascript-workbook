@@ -123,10 +123,6 @@ const switchPlayer = (playerTurn) => {
 }
 
 const validInput = (numToValidate) => {
-  if(isNaN(numToValidate)){
-    // catches anything nasty
-    return numToValidate;
-  }
   return numToValidate >= 0 && numToValidate < 3;
   //catches anything out of bounds. Previous parceInt already eliminated decimals
 }
