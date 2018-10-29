@@ -101,10 +101,8 @@ const checkForWin = () => {
 
 
 const whatIsAtPosition = (row, column)=>{
-  if (row >= 0 && row < 3 && column>=0 && column<3){
-    return board[row][column];
-  }
-  return "err"
+  return board[row][column];
+
 
   // This is tricky, there are 3 values this returns that are needed, an X/O, a blank or an 
   // index out of bounds. To prevent things from blowing up, I had to use
@@ -124,34 +122,44 @@ const switchPlayer = (playerTurn) => {
   return "X"
 }
 
+const validInput = (numToValidate) => {
+  if(isNaN(numToValidate)){
+    // catches anything nasty
+    return numToValidate;
+  }
+  return numToValidate >= 0 && numToValidate < 3;
+  //catches anything out of bounds. Previous parceInt already eliminated decimals
+}
+
 
 const ticTacToe = (row, column) => {
   const formatedRow = parseInt(row);
   const formatedColumn = parseInt(column);
-  if (whatIsAtPosition(formatedRow,formatedColumn)!= "err" && !whatIsAtPosition(formatedRow,formatedColumn).trim()){
-    // strange big of not logic. Basically, if you don't get an error code and
-    // the spot is blank do this block. The trim is because our blanks are technically
-    // spaces. 
-    board[formatedRow][formatedColumn] = playerTurn;
-    if (checkForWin()){
-      console.log("Congratulations, Player " + playerTurn + " wins!")
-      resetGame();
-    } else {
-      if(freeSpots()){
-        // console.log(freeSpots() + " moves remain");
-        playerTurn = switchPlayer(playerTurn);
-      } else {
-        console.log("Game is a tie");
+  // parceInt removes leading 0s just to clean up the input a bit
+  // will be used to test for special chars and other invalid selections in validInput
+  if (validInput(formatedRow)&&validInput(formatedColumn)){
+    if (whatIsAtPosition(formatedRow,formatedColumn) == " "){
+      // simplified logic a lot by having a validator, check to see if blank, then move along
+      board[formatedRow][formatedColumn] = playerTurn;
+      if (checkForWin()){
+        printBoard();
+        // added per request :D
+        console.log("Congratulations, Player " + playerTurn + " wins!")
         resetGame();
+      } else {
+        if(freeSpots()){
+          // console.log(freeSpots() + " moves remain");
+          playerTurn = switchPlayer(playerTurn);
+        } else {
+          console.log("Game is a tie");
+          resetGame();
+        }
       }
+    }else{
+      console.log("Spot contains an " + whatIsAtPosition(formatedRow,formatedColumn) + ", please try again" );
     }
-  }else if (whatIsAtPosition(row,column) != "err"){
-    // if we get this far, then the logic says it already isn't an error, so it must be a blank
-    // can tests again for error or test for blank, I decided to test for error
-    console.log("Spot contains an " + whatIsAtPosition(row,column) + ", please try again" );
   }else{
-    // we have our X/O and blank conditons, so only error remains
-    console.log("Selection out of bounds");
+    console.log("Invalid Selection, please choose 0-2");
   }
 }
 // player 1 enters selects a tile
