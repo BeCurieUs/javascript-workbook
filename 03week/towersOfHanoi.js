@@ -22,6 +22,7 @@ const printStacks = () => {
 const movePiece = (startStack, endStack) => {
   // console.log("When I move you move *just like that*")
   stacks[endStack].push(stacks[startStack].pop());
+
 }
 
 const isLegal = (startStack, endStack) => {
@@ -29,6 +30,11 @@ const isLegal = (startStack, endStack) => {
   const endLength = stacks[endStack].length;
   const startLastElement = stacks[startStack][startLength - 1];
   const endLastElement = stacks[endStack][endLength - 1];
+  // I don't like all this code, thinking about refactoring. Must be a more eligent way to do this
+  // likely use some kind of negative value on a slice?, dunno have to
+  // see how that would work. 
+
+
   // console.log("Start Length " + startLength + " and last value " + startLastElement);
   // console.log("End Length " + endLength + " and last value " + endLastElement);
   if (startLength > 0) {
@@ -51,16 +57,28 @@ const validLetter = (letterInput) =>{
     default:
       return false;
   }
+
+  // there are likely better ways to do this but I just wanted to use a switch statement!
 }
 
 const checkForWin = () => {
   return stacks["a"].length == 0 && stacks["b"].length == 0;
+
+  // done this way so I could, in theory, expand the number of disks
+  // for whatever reason I always like making things that can expand!
 }
 
 const resetGame = () => {
   while(stacks['c'].length>0){
     stacks['a'].push(stacks['c'].shift());
   }
+
+  // Not sure if this is prefered as opposed to just setting the object = to the values like
+  //stacks = {
+  //  a: [4, 3, 2, 1],
+  //  b: [],
+  //  c: []
+  // will experiment later. Also, ask if this causes memory leak if it does work
 }
 
   // let it begin!
