@@ -26,27 +26,13 @@ const movePiece = (startStack, endStack) => {
 }
 
 const isLegal = (startStack, endStack) => {
-  const startLength = stacks[startStack].length;
-  const endLength = stacks[endStack].length;
-  const startLastElement = stacks[startStack][startLength - 1];
-  const endLastElement = stacks[endStack][endLength - 1];
-  // I don't like all this code, thinking about refactoring. Must be a more eligent way to do this
-  // likely use some kind of negative value on a slice?, dunno have to
-  // see how that would work. 
-
-
-  // console.log("Start Length " + startLength + " and last value " + startLastElement);
-  // console.log("End Length " + endLength + " and last value " + endLastElement);
-  if (startLength > 0) {
-    // we don't want to try and pop from an empty array so this is a stopgap measure
-    if(endLength == 0 || endLastElement>=startLastElement){
-      // now we do the normal tower of hanoi size comparison
-      // if where we are going is empty, cool. If the bigger one is one bottom, cool
-      return true;
-    } 
-  }
+  return stacks[startStack].length > 0 && (stacks[endStack].length == 0 || stacks[startStack].slice(-1)[0]<stacks[endStack].slice(-1)[0])
+  // So where you are choosing from needs to have an element, do not do anything if that isn't true
+  // But if the place we are putting is empty, go ahead and do it
+  // if it isn't, then make sure the place we are putting it has a bigger peice than the new one
+  // I had this broken out into 4 variables to increase redability, compressed it down to a single line
+  // let me know what is better coding practice in a cade like this, want to be a good coder!
 }
-
 const validLetter = (letterInput) =>{
   switch(letterInput.toLowerCase()){
     case "a":
@@ -100,6 +86,7 @@ const towersOfHanoi = (startStack, endStack) => {
       if (formatedStart != formatedEnd){
         movePiece(formatedStart, formatedEnd);
         if(checkForWin()){
+          printStacks();
           console.log("You win, you rock at computer science!")
           resetGame();
         }
@@ -189,7 +176,7 @@ if (typeof describe === 'function') {
       stacks = { a: [], b: [], c: [4, 3, 2, 1] };
       assert.equal(checkForWin(), true);
       stacks = { a: [1], b: [], c: [4, 3, 2] };
-      assert.equal(checkForWin(), undefined);
+      assert.equal(checkForWin(), false);
       // I changed your victory condition to stack C
     });
   });
