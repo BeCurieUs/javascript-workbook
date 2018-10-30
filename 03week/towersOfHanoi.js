@@ -20,41 +20,33 @@ const printStacks = () => {
 }
 
 const movePiece = (startStack, endStack) => {
-  // console.log("When I move you move *just like that*")
   stacks[endStack].push(stacks[startStack].pop());
-
 }
 
 const isLegal = (startStack, endStack) => {
-  return stacks[startStack].length > 0 && (stacks[endStack].length == 0 || stacks[startStack].slice(-1)[0]<stacks[endStack].slice(-1)[0])
+  return stacks[startStack].length > 0 && stacks[endStack].length == 0 || stacks[startStack].slice(-1)[0]<stacks[endStack].slice(-1)[0]
   // So where you are choosing from needs to have an element, do not do anything if that isn't true
   // In addiation if the place we are putting is empty, go ahead and do it
   // if it isn't, then make sure the place we are putting it has a bigger peice than the new one
   // I had this broken out into 4 variables to increase redability, compressed it down to a single line
   // let me know what is better coding practice in a case like this, want to be a good coder!
-  // parentheses are needed as the first one needs to be and'ed against the combined result of the or statements
 }
 const validLetter = (letterInput) =>{
   switch(letterInput.toLowerCase()){
     case "a":
     case "b":
     case "c":
-      // console.log("valid letter");
       return true;
     default:
       return false;
   }
-
   // there are likely better ways to do this but I just wanted to use a switch statement, cause I never do!
 }
 
 const checkForWin = () => {
   return stacks["a"].length == 0 && stacks["b"].length == 0;
-
   // done this way so I could, in theory, expand the number of disks
   // for whatever reason I always like making things that can expand!
-  // reather than checking for some absoulte size that might change
-  // just make sure that nothing remains on the other tiles and trust our move logic is good!
 }
 
 const resetGame = () => {
@@ -83,8 +75,8 @@ const resetGame = () => {
 const towersOfHanoi = (startStack, endStack) => {
   const formatedStart = startStack.toLowerCase();
   const formatedEnd = endStack.toLowerCase();
-  // since I used these so much, I decided to make variable for them, could remove if it is a good
-  // practice to not make temps for something like this
+  // since I used these so much, I decided to make variable for them 
+  // could remove if it is a good practice to not make temps for something like this
   
   if(validLetter(formatedStart) && validLetter(formatedEnd)){
     if(isLegal(formatedStart, formatedEnd)){
@@ -103,11 +95,8 @@ const towersOfHanoi = (startStack, endStack) => {
     }
   }else{
     console.log("Invalid letter: Please only a, b or c")
-
   }
 }
-
-
 
 const getPrompt = () => {
   printStacks();
@@ -152,8 +141,8 @@ describe('#validLetter()', () => {
     });
   });
 
-
 //new
+
   describe('#towersOfHanoi()', () => {
     it('should be able to move a block', () => {
       towersOfHanoi('a', 'b');
