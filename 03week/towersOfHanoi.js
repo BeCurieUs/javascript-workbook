@@ -24,7 +24,9 @@ const movePiece = (startStack, endStack) => {
 }
 
 const isLegal = (startStack, endStack) => {
-  return stacks[startStack].length > 0 && stacks[endStack].length == 0 || stacks[startStack].slice(-1)[0]<stacks[endStack].slice(-1)[0]
+  return stacks[startStack].length > 0 && 
+  stacks[endStack].length == 0 || 
+  stacks[startStack].slice(-1)[0]<stacks[endStack].slice(-1)[0]
   // So where you are choosing from needs to have an element, do not do anything if that isn't true
   // In addiation if the place we are putting is empty, go ahead and do it
   // if it isn't, then make sure the place we are putting it has a bigger peice than the new one
