@@ -28,10 +28,11 @@ const movePiece = (startStack, endStack) => {
 const isLegal = (startStack, endStack) => {
   return stacks[startStack].length > 0 && (stacks[endStack].length == 0 || stacks[startStack].slice(-1)[0]<stacks[endStack].slice(-1)[0])
   // So where you are choosing from needs to have an element, do not do anything if that isn't true
-  // But if the place we are putting is empty, go ahead and do it
+  // In addiation if the place we are putting is empty, go ahead and do it
   // if it isn't, then make sure the place we are putting it has a bigger peice than the new one
   // I had this broken out into 4 variables to increase redability, compressed it down to a single line
-  // let me know what is better coding practice in a cade like this, want to be a good coder!
+  // let me know what is better coding practice in a case like this, want to be a good coder!
+  // parentheses are needed as the first one needs to be and'ed against the combined result of the or statements
 }
 const validLetter = (letterInput) =>{
   switch(letterInput.toLowerCase()){
@@ -44,7 +45,7 @@ const validLetter = (letterInput) =>{
       return false;
   }
 
-  // there are likely better ways to do this but I just wanted to use a switch statement!
+  // there are likely better ways to do this but I just wanted to use a switch statement, cause I never do!
 }
 
 const checkForWin = () => {
@@ -52,6 +53,8 @@ const checkForWin = () => {
 
   // done this way so I could, in theory, expand the number of disks
   // for whatever reason I always like making things that can expand!
+  // reather than checking for some absoulte size that might change
+  // just make sure that nothing remains on the other tiles and trust our move logic is good!
 }
 
 const resetGame = () => {
@@ -64,10 +67,11 @@ const resetGame = () => {
   //  a: [4, 3, 2, 1],
   //  b: [],
   //  c: []
-  // will experiment later. Also, ask if this causes memory leak if it does work
+  // will experiment later. Also, need to ask if this causes memory leak if it does work
+  // this old c programer so afarid of memory misallocation! 
 }
 
-  // let it begin!
+  // let it begin! Code Plan!
   // We get user input from where they want to take from to where they want to put to (startStack, endStack)
   // We see if this is a legal move isLegal()T/F
   // if so we move the peiece movePiece() 
@@ -79,7 +83,8 @@ const resetGame = () => {
 const towersOfHanoi = (startStack, endStack) => {
   const formatedStart = startStack.toLowerCase();
   const formatedEnd = endStack.toLowerCase();
-
+  // since I used these so much, I decided to make variable for them, could remove if it is a good
+  // practice to not make temps for something like this
   
   if(validLetter(formatedStart) && validLetter(formatedEnd)){
     if(isLegal(formatedStart, formatedEnd)){
@@ -97,14 +102,14 @@ const towersOfHanoi = (startStack, endStack) => {
       console.log("Not valid move, can't move bigger numbers on top of smaller numbers and can't move empty rows at all!")
     }
   }else{
-    console.log("Invalid letter")
+    console.log("Invalid letter: Please only a, b or c")
 
   }
 }
 
 
 
-function getPrompt() {
+const getPrompt = () => {
   printStacks();
   rl.question('start stack: ', (startStack) => {
     rl.question('end stack: ', (endStack) => {
@@ -119,11 +124,13 @@ function getPrompt() {
 if (typeof describe === 'function') {
 
 // new
-// note: For my functions I wasn't returning false values, only undefines. For whatever reason
+
+// note: For some of my function's weren't returning false values, but rather undefines. For whatever reason
 // mocha will fail the test when it tests for false and sees undefined.
-// i modified the tests to undefined, though this feels like a poor solution.
+// I modified the tests to undefined when it mattered, though this feels like a poor solution.
 // will update them with your recomendations if you have any.
-  describe('#validLetter()', () => {
+  
+describe('#validLetter()', () => {
     it('Should disallow invalid inputs', () => {
       assert.equal(validLetter('dog'), false);
     });
@@ -160,7 +167,7 @@ if (typeof describe === 'function') {
         b: [1],
         c: []
       };
-      assert.equal(isLegal('a', 'b'), undefined);
+      assert.equal(isLegal('a', 'b'), false);
     });
     it('should allow a legal move', () => {
       stacks = {
