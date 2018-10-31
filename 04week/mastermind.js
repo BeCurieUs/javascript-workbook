@@ -32,9 +32,39 @@ function generateHint() {
   // your code here
 }
 
+
+const isValid = (guess)=>{
+
+}
+
+// user makes a guess
+// start to match the guess against the solution
+// guess has to be valid (letters, four of them, can't be empty)
+// if not, tell why
+// put guess on the board
+// check for win
+// if there is a win, tell user and reset board 
+// if there is not a win check for turns 
+// if user is on turn 10 show solution tell user and reset
+// if user isn't show hunts
+// how many letters are right place, right letters wong place
 function mastermind(guess) {
   solution = 'abcd'; // Comment this out to generate a random solution
-  // your code here
+  if(isValid(guess)){
+    board.push(guess)
+    if(checkForWin()){
+      console.log("You won");
+      resestGame();
+    }else{
+      if(board.length<10){
+        showHint();
+      }else{
+        console.log(solution);
+        console.log("You lost");
+        resestGame();
+      }
+    }
+  }
 }
 
 
