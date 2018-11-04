@@ -28,13 +28,36 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function generateHint() {
-  // your code here
+const showHints= (guess) =>{
+  let matchPositionColor = 0;
+  let matchColor = 0;
+  const arraySolution = solution.split("");
+  const arrayGuess = guess.split("");
+  arrayGuess.forEach((letter,index )=> {
+    if(letter == arraySolution[index]){
+      console.log(arrayGuess,arraySolution)
+      matchPositionColor++;
+      arraySolution[index]='!'
+      console.log(arrayGuess,arraySolution)
+    }else{
+      if(arraySolution.indexOf(letter)!=-1){
+        console.log(arrayGuess,arraySolution)
+        arraySolution[index]="!";
+        matchColor++;
+        console.log(arrayGuess,arraySolution)
+
+      }
+    }
+  });
+  return `Number of matched color and position ${matchPositionColor} number of matched just color ${matchColor}`
 }
 
-
 const isValid = (guess)=>{
+  return true;
+}
 
+const checkForWin = () =>{
+  return false;
 }
 
 // user makes a guess
@@ -57,7 +80,7 @@ function mastermind(guess) {
       resestGame();
     }else{
       if(board.length<10){
-        showHint();
+        console.log(showHints(guess));
       }else{
         console.log(solution);
         console.log("You lost");
