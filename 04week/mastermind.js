@@ -42,7 +42,7 @@ const showHints= (guess) =>{
     }else{
       if(arraySolution.indexOf(letter)!=-1){
         console.log(arrayGuess,arraySolution)
-        arraySolution[index]="!";
+        arraySolution[arraySolution.indexOf(letter)]="!";
         matchColor++;
         console.log(arrayGuess,arraySolution)
 
