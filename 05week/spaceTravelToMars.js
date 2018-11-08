@@ -18,8 +18,9 @@ class CrewMember{
   }
   enterShip (myShip){
     this.ship = myShip;
-    this.ship.crew.push(this)
-    console.log(this.ship)
+    // assign new ship pointer to ship object in crew object
+    myShip.crew.push(this)
+    // create cicular reference to crew member object in ship
   }
 }
 class Ship{
@@ -32,7 +33,7 @@ class Ship{
   missionStatement(){
     if(this.crew.length>0) return this.ability
     else return "Can't perform a mission yet."
-    
+    // need crew memember to perform any function of the mission
   }
 }
 
