@@ -9,7 +9,35 @@ let jobTypes = {
   programmer: 'Any Ship!'
 };
 
-// Your code here
+class CrewMember{
+  constructor(name,job,specialSkill){
+    this.name = name;
+    this.job = job;
+    this.specialSkill=specialSkill;
+    this.ship = null;
+  }
+  enterShip (myShip){
+    this.ship = myShip;
+    // assign new ship pointer to ship object in crew object
+    myShip.crew.push(this)
+    // create cicular reference to crew member object in ship
+  }
+}
+class Ship{
+  constructor(name,type,ability){
+    this.name=name;
+    this.type=type;
+    this.ability=ability;
+    this.crew = [];
+  }
+  missionStatement(){
+    if(this.crew.length>0) return this.ability
+    else return "Can't perform a mission yet."
+    // need crew memember to perform any function of the mission
+  }
+}
+
+
 
 //tests
 if (typeof describe === 'function'){
