@@ -8,13 +8,20 @@ const rl = readline.createInterface({
 });
 
 
-function Checker() {
-  // Your code here
+class Checker {
+  constructor(team){
+    this.symbol=team;
+  }
 }
+
+
+
+// 
 
 class Board {
   constructor() {
     this.grid = []
+    this.checkers = [];
   }
   // method that creates an 8x8 array, filled with null values
   createGrid() {
@@ -51,8 +58,32 @@ class Board {
     }
     console.log(string);
   }
+  placeStartPieces(){
+    for(let pieceMaker = 0 ; pieceMaker < 24 ; pieceMaker++){
+      if(pieceMaker<12){
+        const checker= new Checker("X")
+        this.checkers.push(checker)
+      }else{
+        const checker = new Checker("O")
+        this.checkers.push(checker)
+      }
+    }
+    let firstPieceRow = 0;
+    let firstPieceColumn = 1;
+    this.checkers.forEach((checkerPeice)=>{
+      this.grid[firstPieceRow][firstPieceColumn] = checkerPeice;
+      firstPieceColumn+=2;
+      if(firstPieceColumn > 7 && firstPieceRow % 2 == 0){
+        firstPieceColumn=0;
+        firstPieceRow++;
+      }else if (firstPieceColumn > 7 && firstPieceRow % 2 == 1){
+        firstPieceColumn=1;
+        firstPieceRow++;
+      }
+      if(firstPieceRow == 3) firstPieceRow=5
+    })
+  }
 
-  // Your code here
 }
 
 class Game {
@@ -61,6 +92,7 @@ class Game {
   }
   start() {
     this.board.createGrid();
+    this.board.placeStartPieces();
   }
 }
 
@@ -99,7 +131,7 @@ if (typeof describe === 'function') {
       game.moveChecker('52', '43');
       assert(game.board.grid[4][3]);
     });
-    it('should be able to jump over and kill another checker', () => {
+    it('should be able to jump over and murder another checker', () => {
       game.moveChecker('30', '52');
       assert(game.board.grid[5][2]);
       assert(!game.board.grid[4][1]);
