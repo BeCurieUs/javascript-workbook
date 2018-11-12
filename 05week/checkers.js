@@ -44,9 +44,15 @@ class Board {
     }
   }
   isValid (num1){
+    //used for strings
     const rowNumber = Number(num1[0]);
     const colNumber = Number(num1[1]);
     return  num1.length==2 && rowNumber>=0 && rowNumber<8 && colNumber>=0 && colNumber<8;
+  }
+
+  isValidRowCol(rowNumber,colNumber){
+    //used for disasembled numbers
+    return  rowNumber>=0 && rowNumber<8 && colNumber>=0 && colNumber<8;
   }
 
   viewGrid() {
@@ -103,6 +109,13 @@ class Board {
       }
       if(firstPieceRow == 3) firstPieceRow=5
     })
+    // this.deleteThisChecker(this.grid[5][0],"50")
+    // this.deleteThisChecker(this.grid[6][1],"61")
+    // this.deleteThisChecker(this.grid[7][0],"70")
+    // this.deleteThisChecker(this.grid[1][6],"16")
+    // this.deleteThisChecker(this.grid[0][7],"07")
+    // this.deleteThisChecker(this.grid[2][7],"27")
+    // clear side roads for easy king testing
   }
 
   deleteThisChecker(checkerObject,positionInGrid){
@@ -117,14 +130,19 @@ class Board {
 
   lookNorthEast(fromWhere){
     if(this.isValid(fromWhere)){
+      // console.log("Looked North East, returning value")
       return this.grid[Number(fromWhere[0])-1][Number(fromWhere[1])+1]
     }
+    // console.log("Looked North East, failed to find")
   }
   
   lookNorthWest(fromWhere){
     if(this.isValid(fromWhere)){
+      console.log("Looked North West, returning value")
       return this.grid[Number(fromWhere[0])-1][Number(fromWhere[1])-1]
     }
+    // console.log("Looked North West, failed to find")
+
   }
   
   lookSouthEast(fromWhere){
@@ -152,17 +170,21 @@ class Board {
     const validMoveList = [];
 
     if(myDirection==1||myDirection==0&&currentRowNumber<7){
-      // direction 1 means you can only travel up the board, 0 is a king piece, can travel any direction
+      // console.log("Attempting to head south")
+      // direction 1 means you can only travel South, 0 is a king piece, can travel any direction
       // only 7 rows, so stopping this comparison before we go out of bounds stops some things from blowing up
       if(this.lookSouthWest(fromWhere)===null){
+        // console.log("Just checked it SouthWest Was Null")
         //look down and to the left, is it empty, if so, add it to the list of valid jumpable spots
         validMoveList.push((currentRowNumber+1).toString()+(currentColumnNumber-1).toString())
-      } else if (this.lookSouthWest(fromWhere) && currentChecker.symbol){
+      } else if (this.lookSouthWest(fromWhere) && currentChecker.symbol && currentRowNumber <6){
         // look down and to the left, is there something there?
         // look at current position, does it have a symbol...not sure what this logic is here, have to test if it is neccisary, seems
         // redudant. 
+        // console.log("Just did the elseif bellow check SouthWest Null")
         if(currentChecker.symbol != this.lookSouthWest(fromWhere).symbol &&
         !this.lookSouthWest((currentRowNumber+1).toString() + (currentColumnNumber-1).toString())){
+          // console.log("Checked if symbols were different and there was a free spot")
           //look at where we are's symbol, look down and to the left's symbol. If they are opposite and if you look
           //down and to the left twice and there is nothing there, go ahead and add it to the list of allowable moves
           validMoveList.push((currentRowNumber+2).toString()+(currentColumnNumber-2).toString());
@@ -170,35 +192,39 @@ class Board {
         }
       }
       if (this.lookSouthEast(fromWhere)===null){
+        // console.log("Just checked if SoutEast was null")
         // look down and to the right, if there is nothing there, go ahead and add it to the list of moves
         validMoveList.push((currentRowNumber+1).toString()+(currentColumnNumber+1).toString())
-      } else if (this.lookSouthEast(fromWhere) && currentChecker.symbol){
+      } else if (this.lookSouthEast(fromWhere) && currentChecker.symbol && currentRowNumber <6){
+        // console.log("Just did else if bellow SouthEast Null")
         if(currentChecker.symbol != this.lookSouthEast(fromWhere).symbol &&
         !this.lookSouthEast((currentRowNumber+1 ).toString() + (currentColumnNumber+1).toString())){
-          console.log("Sumbols there, comparing now")
+          // console.log("Checked if symbols were different and there was a free spot")
           validMoveList.push((currentRowNumber+2).toString()+(currentColumnNumber+2).toString());
         }
       }
     }
     if (myDirection == -1||myDirection==0&&currentRowNumber>0){
       if(this.lookNorthWest(fromWhere)===null){
+        // console.log("Just checked if NorthWest was null")
         validMoveList.push((currentRowNumber-1).toString()+(currentColumnNumber-1).toString())
-      } else if (this.lookNorthWest(fromWhere) && currentChecker.symbol){
+      } else if (this.lookNorthWest(fromWhere) && currentChecker.symbol && currentRowNumber >1){
         if(currentChecker.symbol != this.lookNorthWest(fromWhere).symbol &&
-        !this.lookSouthEast((currentRowNumber-1 ).toString() + (currentColumnNumber-1).toString())){
+        !this.lookNorthWest((currentRowNumber-1 ).toString() + (currentColumnNumber-1).toString())){
           validMoveList.push((currentRowNumber-2).toString()+(currentColumnNumber-2).toString());
         }
       }
       if (this.lookNorthEast(fromWhere)===null){
+        // console.log("Just checked if NorthEast was null")
         validMoveList.push((currentRowNumber-1).toString()+(currentColumnNumber+1).toString())
-      } else if (this.lookNorthEast(fromWhere) && currentChecker.symbol){
+      } else if (this.lookNorthEast(fromWhere) && currentChecker.symbol && currentRowNumber >1){
         if(currentChecker.symbol != this.lookNorthEast(fromWhere).symbol &&
-        !this.lookSouthEast((currentRowNumber-1 ).toString() + (currentColumnNumber+1).toString())){
+        !this.lookNorthEast((currentRowNumber-1 ).toString() + (currentColumnNumber+1).toString())){
           validMoveList.push((currentRowNumber-2).toString()+(currentColumnNumber+2).toString());
         }
       }
     }
-    console.log(validMoveList)
+    // console.log(validMoveList)
     return validMoveList
   }
 
