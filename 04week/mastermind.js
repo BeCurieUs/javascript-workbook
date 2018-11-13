@@ -28,13 +28,66 @@ function getRandomInt(min, max) {
   return Math.floor(Math.random() * (max - min)) + min;
 }
 
-function generateHint() {
-  // your code here
+const showHints= (guess) =>{
+  let matchPositionColor = 0;
+  let matchColor = 0;
+  const arraySolution = solution.split("");
+  const arrayGuess = guess.split("");
+  arrayGuess.forEach((letter,index )=> {
+    if(letter == arraySolution[index]){
+      console.log(arrayGuess,arraySolution)
+      matchPositionColor++;
+      arraySolution[index]='!'
+      console.log(arrayGuess,arraySolution)
+    }else{
+      if(arraySolution.indexOf(letter)!=-1){
+        console.log(arrayGuess,arraySolution)
+        arraySolution[arraySolution.indexOf(letter)]="!";
+        matchColor++;
+        console.log(arrayGuess,arraySolution)
+
+      }
+    }
+  });
+  return `Number of matched color and position ${matchPositionColor} number of matched just color ${matchColor}`
 }
 
+const isValid = (guess)=>{
+  return true;
+}
+
+const checkForWin = () =>{
+  return false;
+}
+
+// user makes a guess
+// start to match the guess against the solution
+// guess has to be valid (letters, four of them, can't be empty)
+// if not, tell why
+// put guess on the board
+// check for win
+// if there is a win, tell user and reset board 
+// if there is not a win check for turns 
+// if user is on turn 10 show solution tell user and reset
+// if user isn't show hunts
+// how many letters are right place, right letters wong place
 function mastermind(guess) {
   solution = 'abcd'; // Comment this out to generate a random solution
-  // your code here
+  if(isValid(guess)){
+    board.push(guess)
+    if(checkForWin()){
+      console.log("You won");
+      resestGame();
+    }else{
+      if(board.length<10){
+        console.log(showHints(guess));
+      }else{
+        console.log(solution);
+        console.log("You lost");
+        resestGame();
+      }
+    }
+  }
 }
 
 
