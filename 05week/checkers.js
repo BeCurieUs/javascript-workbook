@@ -16,7 +16,7 @@ class Checker {
     this.kingSymbol=king;
 
     // a more complicated checkers object than orignially planned. Likely a smarter way to do direction, but
-    // this will do. I leave symbol incacted for kings becuse the symbol logic is essentual logic 
+    // this will do. I leave symbol alone for kings becuse the symbol logic is essentual logic 
     // to the core of the movemement system. 
   }
 }
@@ -64,11 +64,11 @@ class Board {
     const colNumber = Number(num1[1]);
     return  num1.length==2 && rowNumber>=0 && rowNumber<8 && colNumber>=0 && colNumber<8;
     // I should have just internally delt with row colum as individual numbers, I started to later
-    // but vistitual functionality of the string version of row colm still remain.
+    // but vistigial functionality of the string version of row/col still remain.
   }
 
   isValidRowCol(rowNumber,colNumber){
-    //used for disasembled numbers...I should have done this sooner, vistitial strings hard to read
+    //used for disasembled numbers...I should have done this sooner, vistigial strings hard to read
     return  rowNumber>=0 && rowNumber<8 && colNumber>=0 && colNumber<8;
   }
 
@@ -126,7 +126,7 @@ class Board {
       // move 2 columns over, except...
       if(firstPieceColumn > 7 && firstPieceRow % 2 == 0){
       // if you hit the end of a row, cycle to the next row and reset to the beggining column if you came from
-      // an odd even. 
+      // an even row. 
         firstPieceColumn=0;
         firstPieceRow++;
       }else if (firstPieceColumn > 7 && firstPieceRow % 2 == 1){
@@ -204,7 +204,7 @@ class Board {
       return [];
     }
     const myDirection = this.grid[fromWhere[0]][fromWhere[1]].direction
-    // our checkers piece current direction. 0 is king, 1 is soutn, -1 is north
+    // our checkers piece current direction. 0 is king, 1 is south, -1 is north
     const validMoveList = [];
     // this will hold all our valid moves
 
@@ -228,7 +228,6 @@ class Board {
           //look at where we are's symbol, look down and to the left's symbol. If they are opposite and if you look
           //down and to the left twice and there is nothing there, go ahead and add it to the list of allowable moves
           validMoveList.push((currentRowNumber+2).toString()+(currentColumnNumber-2).toString());
-          //look down and to the left, take this and send it to the glue factory, also send its current possition
         }
       }
 
