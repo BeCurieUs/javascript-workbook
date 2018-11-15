@@ -273,6 +273,7 @@ class Board {
 class Game {
   constructor() {
     this.board = new Board;
+    this.playerTurn = 
   }
   start() {
     this.board.createGrid();
