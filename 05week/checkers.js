@@ -72,6 +72,10 @@ class Board {
     return  rowNumber>=0 && rowNumber<8 && colNumber>=0 && colNumber<8;
   }
 
+  pieceAtLocation(fromWhere){
+    return this.grid[Number(fromWhere[0])][Number(fromWhere[1])]
+  }
+
   viewGrid() {
     // add our column numbers
     let string = "  0 1 2 3 4 5 6 7\n";
@@ -192,6 +196,75 @@ class Board {
     }
   }
 
+  lookNorthEastNumber(row,column){
+    if(this.isValidRowCol(row-1,column+1)){
+      // console.log("Looked North East, returning value")
+      return this.grid[row-1][column+1]
+    }
+    // console.log("Looked North East, failed to find")
+  }
+  
+  lookNorthWestNumber(row,column){
+    if(this.isValidRowCol(row-1,column-1)){
+      // console.log("Looked North West, returning value")
+      return this.grid[row-1][column-1]
+    }
+    // console.log("Looked North West, failed to find")
+
+  }
+  
+  lookSouthEastNumber(row,column){
+    if(this.isValidRowCol(row+1,column+1)){
+      return this.grid[row+1][column+1]
+    }
+  }
+
+  lookSouthWestNumber(row,column){
+    if(this.isValidRowCol(row+1,column-1)){
+      return this.grid[row+1][column-1]
+    }
+  }
+
+  arrayOfJumpMoves(strSymbol){
+    const jumpMoveList = [];
+    this.grid.forEach( (boardRows,rowIndex) => {
+      boardRows.forEach( (currentChecker,colIndex) => {
+        if(currentChecker && currentChecker.symbol == strSymbol ){
+          if(currentChecker.direction==1 || currentChecker.direction==0){
+            if(this.lookSouthEastNumber(rowIndex,colIndex) 
+            && this.lookSouthEastNumber(rowIndex,colIndex).symbol != strSymbol 
+            && this.lookSouthEastNumber(rowIndex+1,colIndex+1) === null ){
+              jumpMoveList.push( (rowIndex+2).toString() + (colIndex+2).toString() )
+            }
+            if(this.lookSouthWestNumber(rowIndex,colIndex) 
+            && this.lookSouthWestNumber(rowIndex,colIndex).symbol != strSymbol 
+            && this.lookSouthWestNumber(rowIndex+1,colIndex-1) === null ){
+              jumpMoveList.push( (rowIndex+2).toString() + (colIndex-2).toString() )
+            }
+          }
+          if(currentChecker.direction==-1 || currentChecker.direction==0){
+            if(this.lookNorthEastNumber(rowIndex,colIndex) 
+            && this.lookNorthEastNumber(rowIndex,colIndex).symbol != strSymbol 
+            && this.lookNorthEastNumber(rowIndex-1,colIndex+1) === null ){
+              jumpMoveList.push( (rowIndex-2).toString() + (colIndex+2).toString() )
+            }
+            if(this.lookNorthWestNumber(rowIndex,colIndex) 
+            && this.lookNorthWestNumber(rowIndex,colIndex).symbol != strSymbol 
+            && this.lookNorthWestNumber(rowIndex-1,colIndex-1) === null ){
+              jumpMoveList.push( (rowIndex-2).toString() + (colIndex-2).toString() )
+            }
+          }
+        } 
+      })
+    })
+    console.log(jumpMoveList);
+    return jumpMoveList;
+  }
+
+  arrayOfNullMoves(){
+
+  }
+
   arrayOfValidMoves(fromWhere){
     const currentRowNumber = Number(fromWhere[0]);
     const currentColumnNumber = Number(fromWhere[1]);
@@ -199,7 +272,7 @@ class Board {
     // right now string literals are still heavily used. 
 
     const currentChecker = this.grid[currentRowNumber][currentColumnNumber];
-    if(!currentChecker){
+    if(!currentChecker ){
       // if where we are coming from is null or undefined, go ahead and return empty array
       return [];
     }
@@ -273,44 +346,115 @@ class Board {
 class Game {
   constructor() {
     this.board = new Board;
-    this.playerTurn = 
+    this.playerTurn = "";
   }
   start() {
     this.board.createGrid();
     this.board.placeStartPieces();
+
+    this.playerTurn = this.board.checkers[0].symbol;
+    // avoids assigning turn to string literal so symbols can change to whatever
+    // only requirement is that the pieces be in order with one player being the first
+    // possition in the array and the other player being the last position
+  }
+
+  annouceTurn(){
+    console.log(`It is player ${this.playerTurn}'s turn`);
+  }
+
+  switchTurns(){
+    if(this.playerTurn == this.board.checkers[0].symbol){
+      this.playerTurn = this.board.checkers[this.board.checkers.length-1].symbol
+    } else{
+      this.playerTurn = this.board.checkers[0].symbol
+    }
+    // a bit abstract way to switch turns, but it assumes the checker pieces 
+    // in the checker array are in order and the first piece is one player
+    // and the last piece is the other player. This avoids hard coding the symbols,
+    // we can change the turn even if we change the symbol literals.
+  }
+
+  correctPLayerTurn(fromWhere){
+    if(this.board.pieceAtLocation(fromWhere)){
+      // if statement avoids explosions if they are attemting to move from an empty space
+      // I think isValid should likely do this, consider changing.
+      return this.playerTurn == this.board.pieceAtLocation(fromWhere).symbol;
+    }
   }
   moveChecker(fromWhere,toWhere){
     if(this.board.isValid(fromWhere) && this.board.isValid(toWhere)){
       // no dumb stuff allowed
-      if(this.board.arrayOfValidMoves(fromWhere).indexOf(toWhere)!=-1){
-        // did you find toWhere in our list of valid moves? If so, proceed 
-        this.board.movePiece(fromWhere,toWhere)
-        // I like to move it move it.
-        if(this.board.grid[toWhere[0]][toWhere[1]].direction==1 && Number(toWhere[0])==7){
-          // if a southern moving piece gets to row 7, it is now a king, 0 direction is king
-          this.board.grid[toWhere[0]][toWhere[1]].direction = 0
+      if(this.correctPLayerTurn(fromWhere)){
+        if(this.board.arrayOfJumpMoves(this.playerTurn).length>0){
+          if(this.board.arrayOfJumpMoves(this.playerTurn).indexOf(toWhere) != -1 ){
+            if(this.board.arrayOfValidMoves(fromWhere).indexOf(toWhere)!=-1){
+              // did you find toWhere in our list of valid moves? If so, proceed 
+              this.board.movePiece(fromWhere,toWhere)
+              // I like to move it move it.
+              if(this.board.grid[toWhere[0]][toWhere[1]].direction==1 && Number(toWhere[0])==7){
+                // if a southern moving piece gets to row 7, it is now a king, 0 direction is king
+                this.board.grid[toWhere[0]][toWhere[1]].direction = 0
+              }
+              if(this.board.grid[toWhere[0]][toWhere[1]].direction==-1 && Number(toWhere[0])==0){
+                // if a northern moving piece gets to row 0, king me. 
+                this.board.grid[toWhere[0]][toWhere[1]].direction = 0
+              }
+              if(this.board.checkers.every( singleChecker => { return singleChecker.symbol == this.board.checkers[0].symbol } )){
+                // look at all the remaining checkers pieces. if they all have the same symbol as the first
+                // in the checkers array, then a player has been eliminated and the remaining player wins
+                console.log("Player " + this.board.checkers[0].symbol + " wins!")
+                this.board.viewGrid();
+                this.board.clearBoard();
+                this.board.placeStartPieces();
+              } else if(this.board.arrayOfJumpMoves(this.playerTurn).length>0){
+                // dont switch turns
+              } else {
+                this.switchTurns();
+              }
+            } 
+          } else {
+            console.log("Must make jump if jump is available")
+          }
+        } else if(this.board.arrayOfValidMoves(fromWhere).indexOf(toWhere)!=-1){
+          // did you find toWhere in our list of valid moves? If so, proceed 
+          this.board.movePiece(fromWhere,toWhere)
+          // I like to move it move it.
+          if(this.board.grid[toWhere[0]][toWhere[1]].direction==1 && Number(toWhere[0])==7){
+            // if a southern moving piece gets to row 7, it is now a king, 0 direction is king
+            this.board.grid[toWhere[0]][toWhere[1]].direction = 0
+          }
+          if(this.board.grid[toWhere[0]][toWhere[1]].direction==-1 && Number(toWhere[0])==0){
+            // if a northern moving piece gets to row 0, king me. 
+            this.board.grid[toWhere[0]][toWhere[1]].direction = 0
+          }
+          if(this.board.checkers.every( singleChecker => { return singleChecker.symbol == this.board.checkers[0].symbol } )){
+            // look at all the remaining checkers pieces. if they all have the same symbol as the first
+            // in the checkers array, then a player has been eliminated and the remaining player wins
+            console.log("Player " + this.board.checkers[0].symbol + " wins!")
+            this.board.viewGrid();
+            this.board.clearBoard();
+            this.board.placeStartPieces();
+          } else {
+            this.switchTurns();
+          }
+        } else {
+          console.log("Attempted to move to invalid place, try again")
         }
-        if(this.board.grid[toWhere[0]][toWhere[1]].direction==-1 && Number(toWhere[0])==0){
-          // if a northern moving piece gets to row 0, king me. 
-          this.board.grid[toWhere[0]][toWhere[1]].direction = 0
-        }
-        if(this.board.checkers.every( singleChecker => { return singleChecker.symbol == this.board.checkers[0].symbol } )){
-          // look at all the remaining checkers pieces. if they all have the same symbol as the first
-          // in the checkers array, then a player has been eliminated and the remaining player wins
-          console.log("Player " + this.board.checkers[0].symbol + " wins!")
-          this.board.viewGrid();
-          this.board.clearBoard();
-          this.board.placeStartPieces();
-        }
+      } else {
+        console.log(`Wrong player move, it is player ${this.playerTurn}'s turn`)
       }
     } else{
-      console.log("Invlaid Move")
+      console.log("Invlaid Move, please choose location on board")
     }
   }
 }
 
 function getPrompt() {
   game.board.viewGrid();
+  game.annouceTurn();
+  // game.board.arrayOfJumpMoves("X");
+  // game.board.arrayOfJumpMoves("O");
+
   rl.question('which piece?: ', (whichPiece) => {
     rl.question('to where?: ', (toWhere) => {
       game.moveChecker(whichPiece, toWhere);
