@@ -196,20 +196,21 @@ class Board {
     }
   }
 
+  // similar set of fuctions as above but with the updated number system
+  // still need old functions for arrayOfValidMoves eventual transition.
+
   lookNorthEastNumber(row,column){
     if(this.isValidRowCol(row-1,column+1)){
-      // console.log("Looked North East, returning value")
+      // Out of bounds elements mess up my logic, test for valid positions before hand
+      // to prevent referecning undefined later
       return this.grid[row-1][column+1]
     }
-    // console.log("Looked North East, failed to find")
   }
   
   lookNorthWestNumber(row,column){
     if(this.isValidRowCol(row-1,column-1)){
-      // console.log("Looked North West, returning value")
       return this.grid[row-1][column-1]
     }
-    // console.log("Looked North West, failed to find")
 
   }
   
@@ -225,20 +226,30 @@ class Board {
     }
   }
 
+
   arrayOfJumpMoves(strSymbol){
     const jumpMoveList = [];
+    // returns a list of every checker pieces jump move landing spots for a team
     this.grid.forEach( (boardRows,rowIndex) => {
       boardRows.forEach( (currentChecker,colIndex) => {
+        // 2D array travercing 
         if(currentChecker && currentChecker.symbol == strSymbol ){
+          // short circuit logic to prevent .symol comparisons to null and undefined
           if(currentChecker.direction==1 || currentChecker.direction==0){
+            // checking if checker piece is moving down the board, 0 is for kings
             if(this.lookSouthEastNumber(rowIndex,colIndex) 
             && this.lookSouthEastNumber(rowIndex,colIndex).symbol != strSymbol 
             && this.lookSouthEastNumber(rowIndex+1,colIndex+1) === null ){
+              // do a short circut test so .symbols doesn't blow up
+              // then look if what is south east is on a different team
+              // and if it is, and the space to the south east of that is also null then
+              // add it to the list of jumpable spots
               jumpMoveList.push( (rowIndex+2).toString() + (colIndex+2).toString() )
             }
             if(this.lookSouthWestNumber(rowIndex,colIndex) 
             && this.lookSouthWestNumber(rowIndex,colIndex).symbol != strSymbol 
             && this.lookSouthWestNumber(rowIndex+1,colIndex-1) === null ){
+              // see above, basically the same, but different direction
               jumpMoveList.push( (rowIndex+2).toString() + (colIndex-2).toString() )
             }
           }
@@ -261,9 +272,15 @@ class Board {
     return jumpMoveList;
   }
 
-  arrayOfNullMoves(){
-
-  }
+  // array of jump moves and array of valid moves have duplicate code that can be 
+  // generalized. Checking a checker for a jump move can be its own individual function
+  // Given a direction and a symbol and its place on the board. 
+  // I am considering having the checker
+  // pieces be individually aware of their position on the grid. This would make
+  // keepng track of them via the checkers array very easy to parce instead
+  // of having to parce the 2d array when I want to make jump comparisons. 
+  // This works for now, however, and might need a bit of a rethink to make for
+  // less repeating of code.
 
   arrayOfValidMoves(fromWhere){
     const currentRowNumber = Number(fromWhere[0]);
@@ -339,6 +356,10 @@ class Board {
     }
     // console.log(validMoveList)
     return validMoveList
+    // lots of legacy code still exists, consider cleaning up to match arrayOfJumpMoves()
+    // styling
+
+
   }
 
 }
@@ -353,8 +374,8 @@ class Game {
     this.board.placeStartPieces();
 
     this.playerTurn = this.board.checkers[0].symbol;
-    // avoids assigning turn to string literal so symbols can change to whatever
-    // only requirement is that the pieces be in order with one player being the first
+    // avoids assigning turn to string literal so symbols can change to whatever.
+    // Requirement is that the pieces be in order with one player being the first
     // possition in the array and the other player being the last position
   }
 
@@ -377,7 +398,8 @@ class Game {
   correctPLayerTurn(fromWhere){
     if(this.board.pieceAtLocation(fromWhere)){
       // if statement avoids explosions if they are attemting to move from an empty space
-      // I think isValid should likely do this, consider changing.
+      // I think isValid() should likely do this, consider changing.
+      // would require some heavy updates to the isvalid() though, so keeping for now
       return this.playerTurn == this.board.pieceAtLocation(fromWhere).symbol;
     }
   }
@@ -386,11 +408,16 @@ class Game {
       // no dumb stuff allowed
       if(this.correctPLayerTurn(fromWhere)){
         if(this.board.arrayOfJumpMoves(this.playerTurn).length>0){
+          // this is checking for jump moves, which in checkers, are manditory to take
+          // if some exist, then we have to use special logic
           if(this.board.arrayOfJumpMoves(this.playerTurn).indexOf(toWhere) != -1 ){
+            // so if where we want to jump to is in the list of jumpable moves
+            // we then need to see if the piece is jumping correctly
             if(this.board.arrayOfValidMoves(fromWhere).indexOf(toWhere)!=-1){
-              // did you find toWhere in our list of valid moves? If so, proceed 
+              // checks the piece specifically if where it is going to vs where is it 
+              // is coming from is valid, if so, procceed
               this.board.movePiece(fromWhere,toWhere)
-              // I like to move it move it.
+              // I like to move it move it. Moves the damn piece finally
               if(this.board.grid[toWhere[0]][toWhere[1]].direction==1 && Number(toWhere[0])==7){
                 // if a southern moving piece gets to row 7, it is now a king, 0 direction is king
                 this.board.grid[toWhere[0]][toWhere[1]].direction = 0
@@ -399,6 +426,25 @@ class Game {
                 // if a northern moving piece gets to row 0, king me. 
                 this.board.grid[toWhere[0]][toWhere[1]].direction = 0
               }
+
+              // having the king logic here means that kinging doesn't interupt the turn
+              // this isn't american rules, but it is Russia rules, I like the russian
+              // rules so I went with that. To make it american rules, you would copy  
+              // the if statement bellow for checking wins and switching turns 
+              // into all of the king sections but remove the 
+              // elseif() statement cause we don't care if there are any more jumpMoves()
+
+              // another method would just to create a local scope variable to this if current
+              // block if and create a new elseif block that switches turns on a king if a kinging
+              // happened above
+              // exmple:
+              // let kingHappened = false;
+              // kingHappened = true; in if statements above
+              // elseif (kingHappened){
+              // this.switchTurns();
+              // }
+
+
               if(this.board.checkers.every( singleChecker => { return singleChecker.symbol == this.board.checkers[0].symbol } )){
                 // look at all the remaining checkers pieces. if they all have the same symbol as the first
                 // in the checkers array, then a player has been eliminated and the remaining player wins
@@ -407,7 +453,21 @@ class Game {
                 this.board.clearBoard();
                 this.board.placeStartPieces();
               } else if(this.board.arrayOfJumpMoves(this.playerTurn).length>0){
-                // dont switch turns
+                // dont switch turns if there are more manditory jump moves on the board
+                // this is how we allow for mutiple jumps. 
+
+                // Bug: this will allow for mutiple pieces to perform jumps and not
+                // switch the turn properly. Have to find someway to understand that
+                // mutiple jumps have to be done with the same piece, not just any
+                // jump moves on the board. This rarely occurs. Most muti jump decisions
+                // are from a single piece, not from 2 seperate pieces achieveing jump 
+                // states at the same turn. 
+
+                // X X X X 
+                //  O   O
+                // this would make it so X would have to jump both pieces before his turn
+                // could be over. The board is not likely to end up in a state like this.
+                // Leaving bug till to becomes an actual problem often.
               } else {
                 this.switchTurns();
               }
@@ -415,6 +475,11 @@ class Game {
           } else {
             console.log("Must make jump if jump is available")
           }
+        // almost the same logic for non-manditory moves, just a bit simplier.
+        // Got complicated because I designed it before understanding we had to
+        // make the game understand mutiple moves and players turn. Would have
+        // likely solved a different way if I understood the rules of checkers more
+        // than I had assumed I had.
         } else if(this.board.arrayOfValidMoves(fromWhere).indexOf(toWhere)!=-1){
           // did you find toWhere in our list of valid moves? If so, proceed 
           this.board.movePiece(fromWhere,toWhere)
@@ -435,6 +500,9 @@ class Game {
             this.board.clearBoard();
             this.board.placeStartPieces();
           } else {
+            // this elseif() from the manditory move logic is missing here because
+            // we always switch the turn if they move into an empty space, we don't 
+            // switch the turn if they still have jump moves to make.
             this.switchTurns();
           }
         } else {
