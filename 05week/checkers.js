@@ -268,7 +268,7 @@ class Board {
         } 
       })
     })
-    console.log(jumpMoveList);
+    // console.log(jumpMoveList);
     return jumpMoveList;
   }
 
