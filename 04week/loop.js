@@ -60,9 +60,18 @@ const countDoWhileLoop = () => {
 }
 
 // When is a for loop better than a while loop?
+// for loops are good for a known number of iterations for loops are generally better 
+
 // How is the readability of the code affected?
+// 
+
 // What is the difference between a for loop and a for...in loop?
+// A for loop is a general case counting loops where as for in is a loop specifically for objects
+
+
 // What is the difference between a while loop and a do...while loop?
+// a while loop runs as long as a condution is true, a while loop will run at least once, and while the condition is true
+
 
 countForLoop();
 countWhileLoop();
