@@ -59,6 +59,10 @@ const countDoWhileLoop = () => {
     } while (counter<1001)
 }
 
+// When is a for loop better than a while loop?
+// How is the readability of the code affected?
+// What is the difference between a for loop and a for...in loop?
+// What is the difference between a while loop and a do...while loop?
 
 countForLoop();
 countWhileLoop();
