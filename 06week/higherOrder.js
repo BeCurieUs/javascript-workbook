@@ -4,7 +4,7 @@ const assert = require('assert');
 
 const forEach = (arr, callback) => {
   for(let i = 0 ; i < arr.length ; i++){
-    callback(arr[i],i,arr)
+    callback(arr[i])
   }
 }
 
@@ -20,7 +20,7 @@ const map = (arr, callback) => {
 const filter = (arr, callback) => {
   const newArr = [];
   for(let i = 0 ; i< arr.length ; i++ ){
-    if (callback(arr[i],i,arr)){
+    if (callback(arr[i])){
       newArr.push(arr[i]);
     }
   }
@@ -29,7 +29,7 @@ const filter = (arr, callback) => {
 
 const some = (arr, callback) => {
   for(let i = 0 ; i< arr.length ; i++ ){
-    if (callback(arr[i],i,arr)){
+    if (callback(arr[i])){
       return true
     }
   }
@@ -38,7 +38,7 @@ const some = (arr, callback) => {
 
 const every = (arr, callback) => {
   for(let i = 0 ; i< arr.length ; i++ ){
-    if (!callback(arr[i],i,arr)){
+    if (!callback(arr[i])){
       return false
     }
   }
